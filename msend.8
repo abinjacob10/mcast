@@ -1,0 +1,119 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.Dd Nov 11, 2024
+.\" Please adjust this date whenever revising the manpage.
+.Dt MSEND 8 SMM
+.Os
+.Sh NAME
+.Nm msend
+.Nd send UDP messages to a multicast group
+.Sh SYNOPSIS
+.Nm
+.Op Fl 46hnvq
+.Op Fl c Ar NUM
+.Op Fl g Ar GROUP
+.Op Fl join
+.Op Fl i Ar ADDRESS
+.Op Fl I Ar INTERFACE
+.Op Fl p Ar PORT
+.Op Fl P Ar PERIOD
+.Op Fl t Ar TTL
+.Op Fl text Ar 'text'
+.Sh DESCRIPTION
+Continuously send UDP packets to the multicast group specified by the
+.Fl g
+and
+.Fl p
+options.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl 4
+Select IPv4 test group, use with
+.Fl I Ar IFACE
+when not using
+.Fl i Ar ADDRESS
+or any
+.Fl g Ar GROUP .
+This is the default.
+.It Fl 6
+Select IPv6 test group when not using
+.Fi i
+or
+.Fl g .
+For an example, see below.
+.It Fl c Ar NUM
+Limit number of packets to send, default: unlimited.
+.It Fl g Ar GROUP
+Specify the IP multicast group address to which the packets are sent.
+The default group for IPv4 is
+.Nm 224.1.1.1
+and for IPv6
+.Nm ff2e::1 .
+.It Fl p Ar PORT
+Specify the UDP port number used by the multicast group.  The default
+port number is
+.Nm 4444 .
+.It Fl join
+Multicast sender will join join the multicast group.  By default, a
+multicast sender does not (need to) join the group.
+.It Fl t Ar TTL
+Specify the TTL (1-255) value in the message.  You must increase this if
+you want to route the traffic, otherwise the first router will drop the
+packets!  The default value is 1.
+.It Fl i Ar ADDRESS
+Specify the IP address of the interface to be used to send the packets.
+The default value is INADDR_ANY which implies that the default interface
+selected by the system will be used.
+.It Fl I Ar INTERFACE
+The interface on which to send.  Can be specified as an alternative to
+.Fl i .
+.It Fl P Ar PERIOD
+Specify the interval in milliseconds between two transmitted packets.
+The default value is 1000 milliseconds.
+.It Fl q
+Quiet mode, do not log to stdout every time a message is successfully
+sent.  Errors are stil logged.
+.It Fl text Ar 'text'
+Specify a message text which is sent as the payload of the packets and
+is displayed by the
+.Xr mreceive 8
+command.  The default value is an empty string.
+.It Fl n
+Interpret the contents of the message text as a number instead of a
+string of characters.  Use
+.Nm mreceive
+.Fl n
+on the other end to interpret the message text correctly.
+.It Fl v
+Print version information.
+.It Fl h
+Print the command usage.
+.El
+.Sh EXAMPLE
+.Bd -literal -offset left
+$ msend -6 -I eth0
+Now sending to multicast group: [ff2e::1]:4444
+Sending msg 1, TTL 1, to [ff2e::1]:4444:
+Sending msg 2, TTL 1, to [ff2e::1]:4444:
+Sending msg 3, TTL 1, to [ff2e::1]:4444:
+Sending msg 4, TTL 1, to [ff2e::1]:4444:
+Sending msg 5, TTL 1, to [ff2e::1]:4444:
+...
+.Ed
+.Sh SEE ALSO
+.Xr mreceive 8
+.Sh AUTHORS
+.An -nosplit
+.Nm mtools ,
+originally called mSendReceive, was written by
+.An Jianping Wang ,
+.An Yvan Pointurier ,
+and
+.An Jörg Liebeherr
+while at University of Virginia's Multimedia Networks Group.  It is
+currently maintained by
+.An Joachim Wiberg
+at
+.Lk https://github.com/troglobit/mtools "GitHub" .

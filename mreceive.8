@@ -1,0 +1,109 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.Dd Nov 11, 2024
+.\" Please adjust this date whenever revising the manpage.
+.Dt MSEND 8 SMM
+.Os
+.Sh NAME
+.Nm mreceive
+.Nd receive UDP multicast messages and display them
+.Sh SYNOPSIS
+.Nm
+.Op Fl 46hnvq
+.Op Fl g Ar GROUP
+.Op Fl i Ar ADDRESS
+.Op ...
+.Op Fl i Ar ADDRESS
+.Op Fl I Ar INTERFACE
+.Op Fl p Ar PORT
+.Op Fl s Ar ADDRESS
+.Sh DESCRIPTION
+Join a multicast group specified by the
+.Fl g
+and
+.Fl p
+options, then receive and display the multicast packets sent to this
+group:port by the
+.Xr msend 8
+command.
+.Sh OPTIONS
+.Bl -tag -width Ds
+.It Fl 4
+Select IPv4 test group, use with
+.Fl I Ar IFACE
+when not using
+.Fl i Ar ADDRESS
+or any
+.Fl g Ar GROUP .
+This is the default.
+.It Fl 6
+Select IPv6 test group when not using
+.Fi i
+or
+.Fl g .
+For an example, see below.
+.It Fl s Ar ADDRESS
+Optional source IP address for source-specific filtering (SSM).  By
+default,
+.Nm
+runs in any-source multicast (ASM) mode.
+.It Fl g Ar GROUP
+Specify the IP multicast address from which the packets are received.
+The default group is
+.Nm 224.1.1.1 .
+.It Fl p Ar PORT
+Specify the UDP port number used by the multicast group.  The default
+port number is
+.Nm 4444 .
+.It Fl q
+Quiet mode, do not log to stdout every time a message is received.
+Errors are stil logged.
+.It Fl i Ar ADDRESS
+Specify the IP addresses of one or more interfaces to receive multicast
+packets.  The default value is
+.Nm INADDR_ANY
+which implies that the default interface selected by the system will be
+used.
+.It Fl I Ar INTERFACE
+The interface on which to receive.  Can be specified as an alternative
+to
+.Fl i .
+.It Fl n
+Interpret the contents of the message as a number instead of a string of
+characters.  This option should be given when running
+.Nm msend
+with the
+.Fl n
+option.
+.It Fl v
+Print version information.
+.It Fl h
+Print the command usage.
+.El
+.Sh EXAMPLE
+.Bd -literal -offset left
+$ mreceive -6 -I eth0
+Now receiving from multicast group: [ff2e::1]:4444
+Receive msg 1 from [2001:9b0:214:3500::c2e]:37801:
+Receive msg 2 from [2001:9b0:214:3500::c2e]:37801:
+Receive msg 3 from [2001:9b0:214:3500::c2e]:37801:
+Receive msg 4 from [2001:9b0:214:3500::c2e]:37801:
+^C
+.Ed
+.Sh SEE ALSO
+.Xr msend 8
+.Sh AUTHORS
+.An -nosplit
+.Nm mtools ,
+originally called mSendReceive, was written by
+.An Jianping Wang ,
+.An Yvan Pointurier ,
+and
+.An Jörg Liebeherr
+while at University of Virginia's Multimedia Networks Group.  It is
+currently maintained by
+.An Joachim Wiberg
+at
+.Lk https://github.com/troglobit/mtools "GitHub" .
